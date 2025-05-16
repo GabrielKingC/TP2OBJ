@@ -72,7 +72,7 @@ defer:
     return result;
 }
 
-#define LAB_NAME "entrypoint"
+#define LAB_NAME "GameLoop"
 bool build_game(void)
 {
     bool result = true;
@@ -90,9 +90,18 @@ bool build_game(void)
     knob_cmd_append(&cmd, "--debug", "-std=c++11", "-fno-sanitize=undefined","-fno-omit-frame-pointer");
     knob_cmd_append(&cmd, "-I"RAYLIB_PATH"/src");
     build_raylib(&cmd);
-    knob_cmd_append(&cmd,knob_temp_sprintf("./src/%s.cpp",LAB_NAME),"-o","./Deployment/game.exe");
+    knob_cmd_append(&cmd, knob_temp_sprintf("./src/%s.cpp", LAB_NAME)); // GameLoop.cpp
+    knob_cmd_append(&cmd, "./src/Game.cpp");
+    knob_cmd_append(&cmd, "./src/GameObject.cpp");
+    knob_cmd_append(&cmd, "./src/Ship.cpp"); 
+    knob_cmd_append(&cmd, "./src/Asteroids.cpp");
+    knob_cmd_append(&cmd, "./src/Projectile.cpp");
     knob_cmd_append(&cmd, "-lkernel32","-lwinmm", "-lgdi32","-lopengl32");
     knob_cmd_append(&cmd,"./src/main.cpp");
+    knob_cmd_append(&cmd, "-o", "./Deployment/game.exe");
+
+
+    
     if (!knob_cmd_run_sync(cmd)) knob_return_defer(false);
     
 defer:
